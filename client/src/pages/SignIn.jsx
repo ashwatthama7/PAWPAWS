@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { signInStart, signInSuccess, signInFailure } from '../redux/user/useSlice';
+import { signInStart, signInSuccess, signInFailure} from '../redux/user/useSlice';
 
 export default function SignIn() {
   const[formData, setFormData] =useState({});
@@ -21,7 +21,7 @@ export default function SignIn() {
       {
         //to prevent the refreshing of the page
         e.preventDefault();
-
+        
         try {
           dispatch(signInStart());
          
@@ -44,8 +44,9 @@ export default function SignIn() {
             }
           dispatch(signInSuccess(data));
           navigate('/');
+
         } catch (error) {
-          dispatch(signInFailure(data.message));
+          dispatch(signInFailure(error.message));
         }
         
       };
