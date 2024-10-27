@@ -1,11 +1,19 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRef, useState, useEffect } from 'react';
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { getDownloadURL, 
+  getStorage, 
+  ref, 
+  uploadBytesResumable 
+} from 'firebase/storage';
 import { app } from '../firebase';
-import { updateUserStart, updateUserSuccess,updateUserFailure } from '../redux/user/useSlice';
+import { updateUserStart, 
+  updateUserSuccess,
+  updateUserFailure, 
+  deleteUserFailure, 
+  deleteUserStart, 
+  deleteUserSuccess } from '../redux/user/useSlice';
 
-
+import { Link } from 'react-router-dom';
 
 
 export default function Profile() {
@@ -15,7 +23,7 @@ export default function Profile() {
   const [ filePerc, setFilePerc] = useState(0);
   const [ fileUploadError, setFileUploadError] = useState(false);
   const [ formData, setFormData] = useState({});
-  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [ updateSuccess, setUpdateSuccess] = useState(false);
   
   const dispatch = useDispatch();
  
@@ -56,6 +64,7 @@ uploadTask.on(
   };
 
   //for preventing page from refresh while submitting
+  /*for the update user functionality */
   const handleSubmit = async(e) =>{
     e.preventDefault();
 
@@ -82,6 +91,28 @@ uploadTask.on(
     }
   };
 
+  //\\*delete user functionality //\\
+const handleDeleteUser = async () =>{
+
+  try {
+    dispatch(deleteUserStart());
+    const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+      method: 'DELETE',
+    });
+
+    const data = await res.json();
+    if (data.success === false){
+      dispatch(deleteUserFailure(data.message));
+      return;
+    }
+    dispatch(deleteUserSuccess(data));
+    
+    
+  } catch (error) {
+    dispatch(deleteUserFailure(error.message));
+  }
+}
+
   //file array ma 0 passs garera first ma select gareko file matra line ho, for some murkh users who selects multiple files.
   return (
     <div className='p-3 max-w-lg mx-auto'>
@@ -89,9 +120,16 @@ uploadTask.on(
       <form onSubmit={handleSubmit}
       className='flex flex-col gap-4'>
         
-        <input onChange={(e)=>setFile(e.target.files[0])} type="file" ref={fileRef} hidden accept='image/*'></input>
+        <input onChange={(e)=>setFile(e.target.files[0])} 
+        type="file" 
+        ref={fileRef} 
+        hidden 
+        accept='image/*'>
+        </input>
         
-        <img onClick={()=> fileRef.current.click()} src={formData.avatar || currentUser.avatar} 
+        <img 
+        onClick={()=> fileRef.current.click()} 
+        src={formData.avatar || currentUser.avatar} 
         className='rounded-full h-24 w-24 
         object-cover cursor-pointer 
         self-center'></img>
@@ -144,13 +182,13 @@ uploadTask.on(
       
       <div className='flex justify-between mt-5'>
 
-        <span className='text-red-700 cursor-pointer'>Delete Account</span>
+        <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer'>Delete Account</span>
         <span className='text-red-700 cursor-pointer'>Sign out</span>
 
       </div>
-
-          <p className='text-red-700 mt-5' >{error ? error :''}</p>
-          <p className='text-green-700'>{updateSuccess ? 'User is updated successfully!!':''}</p>
+      
+      <p className='text-red-700 mt-5'>{error ? error : ''}</p>
+      <p className='text-green-700'>{updateSuccess ? 'User is updated successfully!!':''}</p>
     </div>
   )
 }

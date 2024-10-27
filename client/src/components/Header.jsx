@@ -22,7 +22,9 @@ export default function Header() {
             className="bg-transparent focus:outline-none w-24 sm:w-64"
           />
         </form>
-
+        <button>
+          <FaSearch className='text-slate-600'/>
+        </button>
         <ul className="flex gap-4">
           <Link to="/">
             <li className="text-cyan-700 hidden sm:inline hover:underline">Home</li>
