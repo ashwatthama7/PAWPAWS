@@ -11,7 +11,10 @@ import { updateUserStart,
   updateUserFailure, 
   deleteUserFailure, 
   deleteUserStart, 
-  deleteUserSuccess } from '../redux/user/useSlice';
+  deleteUserSuccess, 
+  signOutUserStart,
+  signOutUserFailure,
+  signOutUserSuccess} from '../redux/user/useSlice';
 
 import { Link } from 'react-router-dom';
 
@@ -111,7 +114,24 @@ const handleDeleteUser = async () =>{
   } catch (error) {
     dispatch(deleteUserFailure(error.message));
   }
-}
+};
+
+const handleSignOut = async() =>{
+  try {
+    dispatch(signOutUserStart());
+    const res = await fetch('/api/auth/signout');
+    const data = await res.json();
+
+    if (data.success === false){
+      dispatch(signOutUserFailure(data.message))
+      return;
+    }
+    dispatch(signOutUserSuccess(data));
+  } catch (error) {
+    signOutUserFailure(data.message)
+  }
+};
+
 
   //file array ma 0 passs garera first ma select gareko file matra line ho, for some murkh users who selects multiple files.
   return (
@@ -182,8 +202,15 @@ const handleDeleteUser = async () =>{
       
       <div className='flex justify-between mt-5'>
 
-        <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer'>Delete Account</span>
-        <span className='text-red-700 cursor-pointer'>Sign out</span>
+        <span 
+        onClick={handleDeleteUser} 
+        className='text-red-700 cursor-pointer'>
+        Delete Account</span>
+        
+        <span 
+        onClick={handleSignOut} 
+        className='text-red-700 cursor-pointer'>
+        Sign out</span>
 
       </div>
       
