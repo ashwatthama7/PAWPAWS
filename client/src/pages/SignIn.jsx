@@ -53,7 +53,7 @@ export default function SignIn() {
       };
 
      return (
-      <div className='p-6 max-w-md mx-auto bg-white rounded-lg shadow-lg'>
+      <div className='p-6 max-w-md mx-auto my-10 bg-blue-300 shadow-blue-200 shadow-lg rounded-lg'>
       <h1 className='text-3l text-center font-semibold my-7'>SignIn</h1>
         <form onSubmit={handleSubmit} className='flex flex-col gap-4 '>
             
@@ -84,7 +84,7 @@ export default function SignIn() {
         <div className='flex gap-2 mt-5'>
         <p>Don't have an account?</p>
             <Link to ={"/sign-up"}> 
-              <span className='text-violet-300'> Sign up</span>
+              <span className='text-pink-800 hover:underline'> Sign up</span>
             </Link>
        </div>
        {error && <p className='text-red-600 mt-5'>{error}</p>}

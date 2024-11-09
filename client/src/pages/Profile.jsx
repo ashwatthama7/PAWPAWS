@@ -11,7 +11,7 @@ import { updateUserStart,
   updateUserFailure, 
   deleteUserFailure, 
   deleteUserStart, 
-  deleteUserSuccess, 
+  deleteUserSuccess,
   signOutUserStart,
   signOutUserFailure,
   signOutUserSuccess} from '../redux/user/useSlice';
@@ -197,7 +197,8 @@ const handleSignOut = async() =>{
       className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-90 disabled:opacity-80 '>
       {loading ? 'Loading...' : 'Update'}</button>
       
-      
+      <Link className= 'bg-emerald-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-90' to = {"/create-listing"}>
+      create a listing</Link>
       </form>
       
       <div className='flex justify-between mt-5'>
