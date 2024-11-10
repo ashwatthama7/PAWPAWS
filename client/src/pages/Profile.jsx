@@ -29,7 +29,11 @@ export default function Profile() {
   const [ updateSuccess, setUpdateSuccess] = useState(false);
   
   const dispatch = useDispatch();
- 
+  const [userListings, setUserListings] = useState([]);
+  const [showListingsError, setShowListingsError] = useState(false);
+
+
+//firebase storage ko lagi 
 useEffect(()=> {
 if(file){
   handleFileUpload(file);
@@ -123,16 +127,50 @@ const handleSignOut = async() =>{
     const data = await res.json();
 
     if (data.success === false){
-      dispatch(signOutUserFailure(data.message))
+      dispatch(deleteUserFailure(data.message));
       return;
     }
-    dispatch(signOutUserSuccess(data));
-  } catch (error) {
-    signOutUserFailure(data.message)
+    dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(data.message));
   }
 };
 
 
+const handleShowListings = async()=>
+{
+  try {
+    setShowListingsError(false);
+    const res = await fetch(`/api/user/listings/${currentUser._id}`);
+    const data = await res.json();
+    if(data.success === false){
+      setShowListingsError(true);
+      return;
+    }
+    setUserListings(data);
+  } catch (error) {
+    setShowListingsError(true);
+  }
+};
+
+/*
+const handleListingDelete = async (listingId) => {
+  try {
+    const res = await fetch(`/api/listing/delete/${listingId}`, {
+      method: 'DELETE',
+    });
+    const data = await res.json();
+    if (data.success === false) {
+      console.log(data.message);
+      return;
+    }
+
+    setUserListings(data);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+*/
   //file array ma 0 passs garera first ma select gareko file matra line ho, for some murkh users who selects multiple files.
   return (
     <div className='p-3 max-w-lg mx-auto'>
@@ -217,6 +255,20 @@ const handleSignOut = async() =>{
       
       <p className='text-red-700 mt-5'>{error ? error : ''}</p>
       <p className='text-green-700'>{updateSuccess ? 'User is updated successfully!!':''}</p>
+      <button onClick={handleShowListings} className='text-emerald-700 w-full'>Show Listings</button>
+          <p className='text-red-700 mt-5'>{showListingsError ? 'Error showing listings':''}</p>
+    
+    {userListings && userListings.length > 0 &&
+    userListings.map((listing) =>(
+      <div key={listing._id} className=''>
+        <Link to = {`/listing/${listing._id}`}>
+        <img src={listing.imageUrls[0]} alt="listing covers" />
+        
+        </Link>
+      </div>
+    ))
+
+    }
     </div>
-  )
+  );
 }
