@@ -50,5 +50,17 @@ export const updateListing = async (req, res, next) =>{
     } catch (error) {
         next(error);
     }
-    
     };
+/*get listig for autofilling the info of the previously filled info of the dog. edit button click paxi ko form auto fillup ko lagi */
+export const getListing = async(req, res, next) =>{
+    try {
+        const listing = await Listing.findById(req.params.id);
+        
+            if(!listing){
+                 return next(errorHandler(404,'Listing not found'));
+             }
+        res.status(200).json(listing);
+    } catch (error) {
+        
+    }
+}
