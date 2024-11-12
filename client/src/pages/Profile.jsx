@@ -153,7 +153,7 @@ const handleShowListings = async()=>
   }
 };
 
-/*
+
 const handleListingDelete = async (listingId) => {
   try {
     const res = await fetch(`/api/listing/delete/${listingId}`, {
@@ -165,12 +165,14 @@ const handleListingDelete = async (listingId) => {
       return;
     }
 
-    setUserListings(data);
+    setUserListings((prev) =>
+      prev.filter((listing) => listing._id !== listingId)
+    );
   } catch (error) {
     console.log(error.message);
   }
 };
-*/
+
   //file array ma 0 passs garera first ma select gareko file matra line ho, for some murkh users who selects multiple files.
   return (
     <div className='p-3 max-w-lg mx-auto'>
