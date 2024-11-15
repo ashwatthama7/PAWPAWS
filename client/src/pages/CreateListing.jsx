@@ -28,7 +28,7 @@ export default function CreateListing() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(formData);
+
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
@@ -90,28 +90,11 @@ export default function CreateListing() {
   };
 
   const handleChange = (e) => {
-    
-
-    if (
-      e.target.id === 'stray' ||
-      e.target.id === 'vaccined'
-    ) {
-      setFormData({
-        ...formData,
-        [e.target.id]: e.target.checked,
-      });
-    }
-
-    if (
-      e.target.type === 'number' ||
-      e.target.type === 'text' ||
-      e.target.type === 'textarea'
-    ) {
-      setFormData({
-        ...formData,
-        [e.target.id]: e.target.value,
-      });
-    }
+    const { id, type, checked, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: type === 'checkbox' ? checked : value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -144,17 +127,18 @@ export default function CreateListing() {
       setLoading(false);
     }
   };
+
   return (
-    <main className='p-3 max-w-4xl mx-auto'>
-      <h1 className='text-3xl font-semibold text-center my-7'>
-      List a Dog
+    <main className='p-4 max-w-4xl mx-auto'>
+      <h1 className='text-3xl font-bold text-center my-5 text-gray-800'>
+        List a Dog
       </h1>
-      <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
-        <div className='flex flex-col gap-4 flex-1'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+        <div className='grid sm:grid-cols-2 gap-6'>
           <input
             type='text'
             placeholder='Name'
-            className='border p-3 rounded-lg'
+            className='border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600'
             id='name'
             maxLength='60'
             minLength='5'
@@ -163,9 +147,8 @@ export default function CreateListing() {
             value={formData.name}
           />
           <textarea
-            type='text'
             placeholder='Description'
-            className='border p-3 rounded-lg'
+            className='border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600'
             id='description'
             required
             onChange={handleChange}
@@ -174,81 +157,72 @@ export default function CreateListing() {
           <input
             type='text'
             placeholder='Address'
-            className='border p-3 rounded-lg'
+            className='border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600'
             id='address'
             required
             onChange={handleChange}
             value={formData.address}
           />
-         
-          <div className='flex gap-2 flex-wrap'>
-              <input
-                type='checkbox'
-                id='stray'
-                className='w-5'
-                onChange={handleChange}
-                checked={formData.stray}
-              />
-              <span>Stray</span>
-            </div>
-            <div className='flex gap-2'>
-              <input
-                type='checkbox'
-                id='vaccined'
-                className='w-5'
-                onChange={handleChange}
-                checked={formData.vaccined}
-              />
-              <span>Vaccined</span>
-            </div>
-            
+          <div className='flex items-center gap-2'>
+            <input
+              type='checkbox'
+              id='stray'
+              onChange={handleChange}
+              checked={formData.stray}
+              className='w-5'
+            />
+            <label htmlFor='stray'>Stray</label>
           </div>
-          <div className='flex flex-wrap gap-6'>
-            <div className='flex items-center gap-2'>
-              <h4 className='text-lg font-semibold'>Age</h4>
-              <input
-                type='number'
-                id='year'
-                min='0'
-                max='20'
-                required
-                className='p-3 border border-gray-300 rounded-lg'
-                onChange={handleChange}
-                value={formData.year}
-              />
-              <p>Years</p>
-            </div>
-            <div className='flex items-center gap-2'>
-              <input
-                type='number'
-                id='month'
-                min='0'
-                max='11'
-                required
-                className='p-3 border border-gray-300 rounded-lg'
-                onChange={handleChange}
-                value={formData.month}
-              />
-              <p>Months</p>
-            </div>
-            <div className='flex items-center gap-2'>
-              <input
-                type='number'
-                id='Price'
-                min='0'
-                max='10000000'
-                required
-                className='p-3 border border-gray-300 rounded-lg'
-                onChange={handleChange}
-                value={formData.Price}
-              />
-              <div className='flex flex-col items-center'>
-                <p>Price</p>
-                <span className='text-xs'>(Rs.)</span>               
-              </div>
-            </div>
-           </div>
-        <div className='flex flex-col flex-1 gap-4'>
+          <div className='flex items-center gap-2'>
+            <input
+              type='checkbox'
+              id='vaccined'
+              onChange={handleChange}
+              checked={formData.vaccined}
+              className='w-5'
+            />
+            <label htmlFor='vaccined'>Vaccined</label>
+          </div>
+          <div className='flex items-center gap-2'>
+            <h4 className='text-lg font-semibold'>Age</h4>
+            <input
+              type='number'
+              id='year'
+              min='0'
+              max='20'
+              required
+              className='p-3 border border-gray-300 rounded-lg w-20'
+              onChange={handleChange}
+              value={formData.year}
+            />
+            <p>Years</p>
+            <input
+              type='number'
+              id='month'
+              min='0'
+              max='11'
+              required
+              className='p-3 border border-gray-300 rounded-lg w-20'
+              onChange={handleChange}
+              value={formData.month}
+            />
+            <p>Months</p>
+          </div>
+          <div className='flex items-center gap-2'>
+            <input
+              type='number'
+              id='Price'
+              min='0'
+              max='10000000'
+              required
+              className='p-3 border border-gray-300 rounded-lg w-full'
+              onChange={handleChange}
+              value={formData.Price}
+            />
+            <p className='text-sm font-semibold'>Price (Rs.)</p>
+          </div>
+        </div>
+        <div className='flex flex-col gap-4'>
           <p className='font-semibold'>
             Images:
             <span className='font-normal text-gray-600 ml-2'>
@@ -268,7 +242,7 @@ export default function CreateListing() {
               type='button'
               disabled={uploading}
               onClick={handleImageSubmit}
-              className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'
+              className='p-3 text-green-700 border border-green-700 rounded-lg hover:bg-green-100 disabled:opacity-80'
             >
               {uploading ? 'Uploading...' : 'Upload'}
             </button>
@@ -280,17 +254,17 @@ export default function CreateListing() {
             formData.imageUrls.map((url, index) => (
               <div
                 key={url}
-                className='flex justify-between p-3 border items-center'
+                className='flex justify-between p-3 border items-center bg-gray-50 rounded-lg'
               >
                 <img
                   src={url}
                   alt='listing image'
-                  className='w-20 h-20 object-contain rounded-lg'
+                  className='w-20 h-20 object-cover rounded-lg'
                 />
                 <button
                   type='button'
                   onClick={() => handleRemoveImage(index)}
-                  className='p-3 text-red-700 rounded-lg uppercase hover:opacity-75'
+                  className='p-3 text-red-700 rounded-lg hover:bg-red-100'
                 >
                   Delete
                 </button>
@@ -298,7 +272,7 @@ export default function CreateListing() {
             ))}
           <button
             disabled={loading || uploading}
-            className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
+            className='p-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-80'
           >
             {loading ? 'Creating...' : 'Create listing'}
           </button>
