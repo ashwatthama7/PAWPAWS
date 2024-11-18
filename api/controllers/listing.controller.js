@@ -82,7 +82,6 @@ export const getListings = async(req, res, next)=>{
             stray = {$in:[false, true]};  
         }
 
-
         const searchTerm = req.query.searchTerm || '';
 
         const sort = req.query.sort || 'createdAt';
@@ -101,4 +100,6 @@ export const getListings = async(req, res, next)=>{
     } catch (error) {
         next(error); 
     }
-}
+    
+};
+    
