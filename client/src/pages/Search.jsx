@@ -34,7 +34,6 @@ export default function Search() {
     ) {
       setSidebardata({
         searchTerm: searchTermFromUrl || '',
-        
         vaccined: vaccinedFromUrl === 'true' ? true : false,
         stray: strayFromUrl === 'true' ? true : false,
         sort: sortFromUrl || 'created_at',

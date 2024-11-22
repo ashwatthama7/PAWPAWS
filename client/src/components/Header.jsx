@@ -50,6 +50,9 @@ export default function Header() {
           <Link to="/">
             <li className="text-red-300 hidden sm:inline hover:underline">Home</li>
           </Link>
+          <Link to="/news">
+            <li className="text-red-300 hidden sm:inline hover:underline">News</li>
+          </Link>
           <Link to="/donate">
             <li className="text-red-300 hidden sm:inline hover:underline">Donate</li>
           </Link>
