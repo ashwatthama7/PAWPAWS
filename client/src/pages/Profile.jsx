@@ -283,7 +283,7 @@ const handleListingDelete = async (listingId) => {
               >
                 <p>{listing.name}</p>
               </Link>
-
+              
               <div className='flex flex-col item-center'>
                 <button
                   onClick={() => handleListingDelete(listing._id)}

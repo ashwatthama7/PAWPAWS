@@ -14,26 +14,10 @@ const listingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    Price: {
-      type: Number,
+    breed:{
+      type: String,
       required: true,
     },
-      year: {
-      type: Number,
-      required: true,
-    },
-    month: {
-      type: Number,
-      required: true,
-    },
-   stray:{
-    type:Boolean,
-    required: true,
-   },
-   vaccined:{
-    type:Boolean,
-    required: true,
-   },
     imageUrls: {
       type: Array,
       required: true,
@@ -46,6 +30,6 @@ const listingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Listing = mongoose.model('Listing', listingSchema);
+const Listing = mongoose.model('Listing', listingSchema);//Listing is called on different pages
 
 export default Listing;

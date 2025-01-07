@@ -1,7 +1,7 @@
 import Listing from "../models/listing.model.js";
 import { errorHandler } from "../utils/error.js";
 
-
+//create listing controller.....
 export const createListing = async (req, res, next) => {
     try {
         const listing = await Listing.create(req.body);
@@ -10,7 +10,7 @@ export const createListing = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
 export const deleteListing = async (req, res, next) => {
 const listing = await Listing.findById(req.params.id);

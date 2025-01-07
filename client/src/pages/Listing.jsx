@@ -40,7 +40,7 @@ export default function Listing() {
 
   return (
     <main className="p-4">
-      {loading && <p className="text-center my-7 text-xl md:text-2xl">Loading...</p>}
+      {loading && <p className="text-center my-7 text-xl md:text-2xl">Loading.....</p>}
       {error && <p className="text-center my-7 text-xl md:text-2xl">Something went wrong!</p>}
 
       {listing && !loading && !error && (
@@ -80,11 +80,11 @@ export default function Listing() {
           <div className="flex flex-col items-center md:items-start gap-4">
                 <div className="flex flex-row items-center gap-2">
                     <p className="text-xl sm:text-2xl md:text-3xl font-semibold text-center md:text-left">
-                        {listing.name}
-                    </p>
-                     <p className="text-sm font-medium text-gray-600 text-center md:text-left">
-                         ({listing.year} years {listing.month} months)
-                     </p>
+                        {listing.name},
+                        </p>
+                        <p className='text-sm'>
+                        {listing.breed}
+                        </p>
                 </div>
             </div>
 
@@ -94,25 +94,18 @@ export default function Listing() {
             <p>{listing.address}</p>
           </div>
 
-          {/* Status Tags */}
-          <div className="flex flex-row gap-4 justify-center md:justify-start mb-6">
-            <p className="bg-red-600 w-36 text-white text-center p-2 rounded-md text-xs sm:text-sm shadow-md">
-              {listing.stray === 'true' ? 'Stray' : 'Not Stray'}
-            </p>
-            <p className="bg-green-600 w-36 text-white text-center p-2 rounded-md text-xs sm:text-sm shadow-md">
-              {listing.vaccined === 'true' ? 'Vaccinated' : 'Not Vaccinated'}
-            </p>
-          </div>
+
 
           {/* Description */}
           <div className="p-3 text-center md:text-left max-w-4xl mx-auto">
             <h1 className="font-bold text-base sm:text-lg text-blue-950 mb-2">Description</h1>
             <p className="text-sm sm:text-base font-medium text-gray-800">{listing.description}</p>
           </div>
-          <div>
+          <div className="flex justify-center mt-6">
             {currentUser && listing.userRef !== currentUser._id && !contact &&(
             <button onClick={()=> setContact(true)} className='bg-slate-700 text-white rounded-lg uppercase p-3 hover:opacity-95'>
               Contact Uploader
+             
             </button>
             )}
             {contact && <Contact listing={listing}/>}

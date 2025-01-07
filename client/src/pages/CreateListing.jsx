@@ -18,16 +18,28 @@ export default function CreateListing() {
     name: '',
     description: '',
     address: '',
-    year: 0,
-    month: 0,
-    Price: 0,
-    stray: false,
-    vaccined: false,
+    breed:'Unknown breed',
+    
   });
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+ 
+  
+  const breeds = [
+    'Unknown Breed',
+    'Labrador Retriever',
+    'German Shepherd',
+    'Golden Retriever',
+    'Bulldog',
+    'Beagle',
+    'Poodle',
+    'Rottweiler',
+    'Yorkshire Terrier',
+    'Dachshund',
+    'Siberian Husky',
+  ];
 
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -102,9 +114,7 @@ export default function CreateListing() {
     try {
       if (formData.imageUrls.length < 1)
         return setError('You must upload at least one image');
-      if (+formData.regularPrice < +formData.discountPrice)
-        return setError('Discount price must be lower than regular price');
-      setLoading(true);
+       setLoading(true);
       setError(false);
       const res = await fetch('/api/listing/create', {
         method: 'POST',
@@ -127,6 +137,8 @@ export default function CreateListing() {
       setLoading(false);
     }
   };
+
+
 
   return (
     <main className="p-4 max-w-4xl mx-auto">
@@ -166,70 +178,28 @@ export default function CreateListing() {
             onChange={handleChange}
             value={formData.address}
           />
-          {/* Stray and Vaccined Checkboxes */}
-          <div className="flex gap-6">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="stray"
-                onChange={handleChange}
-                checked={formData.stray}
-                className="w-5"
-              />
-              <label htmlFor="stray">Stray</label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="vaccined"
-                onChange={handleChange}
-                checked={formData.vaccined}
-                className="w-5"
-              />
-              <label htmlFor="vaccined">Vaccinated</label>
-            </div>
-          </div>
-          {/* Age Inputs */}
-          <div className="flex items-center gap-2">
-            <h4 className="text-lg font-semibold">Age</h4>
-            <input
-              type="number"
-              id="year"
-              min="0"
-              max="20"
-              required
-              className="p-3 border border-gray-300 rounded-lg w-20"
+
+          {/*dropdown menu for breed selection*/}
+          <div>
+            <label htmlFor="breed" className="font-semibold block mb-2">
+              Breed
+            </label>
+            <select
+              id="breed"
+              value={formData.breed}
               onChange={handleChange}
-              value={formData.year}
-            />
-            <p>Years</p>
-            <input
-              type="number"
-              id="month"
-              min="0"
-              max="11"
-              required
-              className="p-3 border border-gray-300 rounded-lg w-20"
-              onChange={handleChange}
-              value={formData.month}
-            />
-            <p>Months</p>
-          </div>
-          {/* Price Input */}
-          <div className="flex items-center gap-2">
-            <input
-              type="number"
-              id="Price"
-              min="0"
-              max="10000000"
-              required
-              className="p-3 border border-gray-300 rounded-lg w-full"
-              onChange={handleChange}
-              value={formData.Price}
-            />
-            <p className="text-sm font-semibold">Price (Rs.)</p>
+              className="border p-3 rounded-lg w-full"
+            >
+              {/*breeds.map le breeds ma bhayeko value breed lai select garna dinxa */}
+              {breeds.map((breed) => (
+                <option key={breed} value={breed}>
+                  {breed}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
+          
         {/* Image Upload */}
         <div className="flex flex-col gap-4">
           <p className="font-semibold">

@@ -11,7 +11,7 @@ import CreateListing from './pages/CreateListing';
 import UpdateListing from './pages/UpdateListing';
 import Listing from './pages/Listing';
 import Search from './pages/Search';
-import Search from './pages/News';
+import News from './pages/News';
 export default function App() {
   return (
     <BrowserRouter>
@@ -24,7 +24,7 @@ export default function App() {
       <Route path='/listing/:listingId' element={<Listing />}/>
       <Route path='/donate' element={<Donate />}/>
       <Route path='/search' element={<Search/>}/>
-      <Route path='/news' element={<Search/>}/>
+      <Route path='/news' element={<News/>}/>
    
    
       <Route element={<PrivateRoute/>}>

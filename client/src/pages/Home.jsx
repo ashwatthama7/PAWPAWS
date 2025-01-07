@@ -11,62 +11,66 @@ SwiperCore.use([Navigation]);
 export default function Home() {
   const [strayListings, setStrayListings] = useState([]);
   const [vaccinedListings, setVaccinedListings] = useState([]);
+  const [combinedListings, setCombinedListings] = useState([]);
 
   useEffect(() => {
-    const fetchStrayListings = async () => {
+    const fetchListings = async () => {
       try {
-        const res = await fetch('/api/listing/get?stray=true&limit=4');
-        const data = await res.json();
-        setStrayListings(data);
+        // Fetch stray listings
+        const strayRes = await fetch('/api/listing/get?stray=true&limit=4');
+        const strayData = await strayRes.json();
+
+        // Fetch vaccinated listings
+        const vaccinedRes = await fetch('/api/listing/get?vaccined=true&limit=4');
+        const vaccinedData = await vaccinedRes.json();
+
+        // Combine and deduplicate listings
+        const mergedListings = [...strayData, ...vaccinedData];
+        const uniqueListings = Array.from(new Set(mergedListings.map((item) => item._id)))
+          .map((id) => mergedListings.find((item) => item._id === id));
+
+        setStrayListings(strayData);
+        setVaccinedListings(vaccinedData);
+        setCombinedListings(uniqueListings); // Store unique listings for Swiper
       } catch (error) {
-        console.error('Error fetching stray listings:', error);
+        console.error('Error fetching listings:', error);
       }
     };
 
-    const fetchVaccinedListings = async () => {
-      try {
-        const res = await fetch('/api/listing/get?vaccined=true&limit=4');
-        const data = await res.json();
-        setVaccinedListings(data);
-      } catch (error) {
-        console.error('Error fetching vaccinated listings:', error);
-      }
-    };
-
-    fetchStrayListings();
-    fetchVaccinedListings();
+    fetchListings();
   }, []);
 
   return (
     <div>
       {/* Top Section */}
-      <div className='flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto'>
-        <h1 className='text-slate-700 font-bold text-3xl lg:text-6xl'>
-          Rescue Rehabilitate Rehome
-          <br />
-        </h1>
-        <h2 className='text-slate-700 font-bold text-3xl lg:text-6xl'>
-          Together We Can Make a Difference
-          <br />
-        </h2>
-        <div className='text-gray-400 text-xs sm:text-sm'>
-          Help us rescue stray dogs and ensure every vaccinated dog gets a safe home.
-          <br />
-          Your contribution can make a significant impact!
-        </div>
-        <Link
-          to={'/search'}
-          className='text-xs sm:text-sm text-blue-800 font-bold hover:underline'
-        >
-          Let's get started...
-        </Link>
-      </div>
+      <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto animate-float-up">
+  <h1 className="text-slate-700 font-bold text-3xl lg:text-6xl">
+    Rehabilitate Rehome
+    <br />
+  </h1>
+  <h2 className="text-slate-700 font-bold text-3xl lg:text-6xl">
+    Together We Can Make a Difference
+    <br />
+  </h2>
+  <div className="text-gray-400 text-xs sm:text-sm">
+    Help us rescue stray dogs and ensure every vaccinated dog gets a safe home.
+    <br />
+    Your contribution can make a significant impact!
+  </div>
+  <Link
+    to={'/search'}
+    className="text-xs sm:text-sm text-blue-800 font-bold hover:underline"
+  >
+    Let's get started...
+  </Link>
+</div>
 
-      {/* Swiper Section for Stray Listings */}
+
+
+      {/* Unified Swiper Section */}
       <Swiper navigation>
-        {strayListings &&
-          strayListings.length > 0 &&
-          strayListings.map((listing) => (
+        {combinedListings.length > 0 &&
+          combinedListings.map((listing) => (
             <SwiperSlide key={listing._id}>
               <div
                 style={{
@@ -79,7 +83,7 @@ export default function Home() {
           ))}
       </Swiper>
 
-      {/* Listing Results for Stray and Vaccinated Dogs */}
+      {/* Listing Results */}
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
         {strayListings && strayListings.length > 0 && (
           <div>
