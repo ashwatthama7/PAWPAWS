@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getDownloadURL,
   getStorage,
@@ -7,11 +7,12 @@ import {
 } from 'firebase/storage';
 import { app } from '../firebase';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function UpdateListing() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const params = useParams(); //for fetching the data from the create listing page using the listingId
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     imageUrls: [],
@@ -40,6 +41,23 @@ export default function UpdateListing() {
     'Dachshund',
     'Siberian Husky',
   ];
+
+  //this section helps in fetching data i.e. actual logic ins implemented here
+  useEffect(()=>{
+    const fetchListing = async() => {
+      const listingId = params.listingId;
+      const res = await fetch(`/api/listing/get/${listingId}`);
+      const data = await res.json();
+      
+      if(data.success === false){
+        setError(data.message);
+        return;
+      }
+    setFormData(data);
+    } 
+    fetchListing();
+  },[]);
+
 
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -116,7 +134,7 @@ export default function UpdateListing() {
         return setError('You must upload at least one image');
        setLoading(true);
       setError(false);
-      const res = await fetch('/api/listing/create', {
+      const res = await fetch(`/api/listing/update/${params.listingId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +161,7 @@ export default function UpdateListing() {
   return (
     <main className="p-4 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold text-center my-5 text-gray-800">
-        Update the listing
+        Update Dog Info 
       </h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid sm:grid-cols-2 gap-6">
