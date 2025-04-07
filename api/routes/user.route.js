@@ -3,7 +3,6 @@ import { test, updateUser, deleteUser, getUserListings, getUser } from '../contr
 import { verifyToken } from '../utils/verifyUser.js';
 
 
-
 const router = express.Router();
 
 router.get('/test',test);

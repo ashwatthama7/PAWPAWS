@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
-import { FaMapMarker, FaShare } from 'react-icons/fa';
+import { FaMapMarker, FaShare, FaComments } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
-import Contact from '../components/Contact';
+import { fetchUsers, setSelectedUser, fetchMessages } from '../redux/chatSlice';
+import { useDispatch } from 'react-redux';
+
 export default function Listing() {
   SwiperCore.use([Navigation]);
   const [listing, setListing] = useState(null);
@@ -14,8 +16,10 @@ export default function Listing() {
   const [error, setError] = useState(false);
   const params = useParams();
   const [copied, setCopied] = useState(false);
-  const {currentUser} = useSelector((state)=>state.user);
-  const [contact,setContact]= useState(false)
+  const { currentUser } = useSelector((state) => state.user);
+  const [contact, setContact] = useState(false);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchListing = async () => {
       try {
@@ -37,7 +41,37 @@ export default function Listing() {
     };
     fetchListing();
   }, [params.listingId]);
+   // Import if not already
 
+  const dispatch = useDispatch();
+  const { users } = useSelector((state) => state.chat); // Add this inside your component if not present
+  
+  const handleStartChat = async () => {
+    try {
+      // If users not loaded yet, fetch them
+      if (!users || users.length === 0) {
+        await dispatch(fetchUsers()).unwrap();
+      }
+  
+      // Find the seller by listing.userRef
+      const seller = users.find((u) => u._id === listing.userRef);
+  
+      if (!seller) {
+        alert('Unable to find seller. Please try again.');
+        return;
+      }
+  
+      // Set selected user and fetch messages
+      dispatch(setSelectedUser(seller));
+      dispatch(fetchMessages(seller._id));
+  
+      // Navigate to chat page
+      navigate('/chat');
+    } catch (error) {
+      console.error('Failed to start chat:', error);
+      alert('Failed to start chat. Please try again.');
+    }
+  };
   return (
     <main className="p-4">
       {loading && <p className="text-center my-7 text-xl md:text-2xl">Loading.....</p>}
@@ -78,15 +112,15 @@ export default function Listing() {
 
           {/* Listing Details */}
           <div className="flex flex-col items-center md:items-start gap-4">
-                <div className="flex flex-row items-center gap-2">
-                    <p className="text-xl sm:text-2xl md:text-3xl font-semibold text-center md:text-left">
-                        {listing.name},
-                        </p>
-                        <p className='text-sm'>
-                        {listing.breed}
-                        </p>
-                </div>
+            <div className="flex flex-row items-center gap-2">
+              <p className="text-xl sm:text-2xl md:text-3xl font-semibold text-center md:text-left">
+                {listing.name},
+              </p>
+              <p className="text-sm">
+                {listing.breed}
+              </p>
             </div>
+          </div>
 
           {/* Address */}
           <div className="flex items-center gap-2 text-slate-600 text-sm sm:text-base font-medium justify-center md:justify-start p-3">
@@ -94,21 +128,25 @@ export default function Listing() {
             <p>{listing.address}</p>
           </div>
 
-
-
           {/* Description */}
           <div className="p-3 text-center md:text-left max-w-4xl mx-auto">
             <h1 className="font-bold text-base sm:text-lg text-blue-950 mb-2">Description</h1>
             <p className="text-sm sm:text-base font-medium text-gray-800">{listing.description}</p>
           </div>
-          <div className="flex justify-center mt-6">
-            {currentUser && listing.userRef !== currentUser._id && !contact &&(
-            <button onClick={()=> setContact(true)} className='bg-slate-700 text-white rounded-lg uppercase p-3 hover:opacity-95'>
-              Contact Uploader
-             
-            </button>
+          
+          {/* Contact Buttons */}
+          <div className="flex justify-center mt-6 gap-4">
+            {currentUser && listing.userRef !== currentUser._id && !contact && (
+              <>
+                <button 
+                  onClick={handleStartChat} 
+                  className='bg-sky-600 text-white rounded-lg uppercase p-3 hover:opacity-95 flex items-center gap-2'
+                >
+                  <FaComments /> Start Chat
+                </button>
+              </>
             )}
-            {contact && <Contact listing={listing}/>}
+            
           </div>
         </div>
       )}

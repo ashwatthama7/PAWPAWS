@@ -29,7 +29,7 @@ const listingSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+listingSchema.index({ name: "text", description: "text", address: "text", breed: "text" });
 const Listing = mongoose.model('Listing', listingSchema);//Listing is called on different pages
 
 export default Listing;

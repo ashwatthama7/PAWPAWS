@@ -10,7 +10,6 @@ export const signup = async (req, res, next) => {
     const newUser = new User({ username, email, password: hashedpassword });
     
     try{
-
     await newUser.save();
     res.status(201).json("User created sucessfully!");
    
@@ -30,9 +29,13 @@ export const signin = async (req, res, next) => {
         const token = jwt.sign({id: validUser._id }, process.env.JWT_SECRET);
         const{password: pass, ...rest}= validUser._doc; //for hiding password from cookie
         res
-        .cookie('access_token', token,{httpOnly: true})
+        .cookie('access_token', token,{
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true,
+        })
         .status(200)
-        .json({rest});//session and hiding password
+        .json(rest);//session and hiding password
     } catch (error) {
         next(error);
     }
@@ -48,7 +51,11 @@ export const google = async(req, res, next) => {
             const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
             const{password: pass, ...rest } = user._doc;
             res
-            .cookie('access_token', token, {httpOnly: true})
+            .cookie('access_token', token, {
+                httpOnly: true,
+                sameSite: 'none',
+                secure: true,
+            })
             .status(200)
             .json(rest);
         }
@@ -77,3 +84,11 @@ export const signOut = async (req, res, next) => {
         next(error);
     }
 };
+export const checkAuth = (req, res) => {
+    try {
+      res.status(200).json(req.user);
+    } catch (error) {
+        next(error)
+    }
+  };
+  

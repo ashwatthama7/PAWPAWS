@@ -29,6 +29,7 @@ export default function CreateListing() {
   
   const breeds = [
     'Unknown Breed',
+    'News',
     'Labrador Retriever',
     'German Shepherd',
     'Golden Retriever',
@@ -182,7 +183,7 @@ export default function CreateListing() {
           {/*dropdown menu for breed selection*/}
           <div>
             <label htmlFor="breed" className="font-semibold block mb-2">
-              Breed
+              Breed/News
             </label>
             <select
               id="breed"

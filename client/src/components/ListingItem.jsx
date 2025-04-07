@@ -26,18 +26,7 @@ export default function ListingItem({ listing }) {
             <p className='text-sm text-gray-600 line-clamp-2'>
               {listing.description || 'No description available'}
             </p>
-            <p className='text-slate-500 mt-2 font-semibold '>
-              Rs.{listing.price?.toLocaleString('en-US') || '0'}
-            </p>
-            <div className='text-slate-700 flex gap-4'>
-              <div className='font-bold text-xs'>
-                {listing.year || '0'} yrs
-              </div>
-              <div className='font-bold text-xs'>
-                {listing.month || '0'} mths
-              </div>
             </div>
-          </div>
         </Link>
       </div>
     );

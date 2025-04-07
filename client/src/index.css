@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body{
-    background-color:rgb(175, 204, 198);
+    background-color:rgb(255, 255, 255);
 }
 
 @keyframes float-up {
@@ -20,4 +20,34 @@ body{
   .animate-float-up {
     animation: float-up 1.2s ease-out;
   }
-  
+  /* For smooth message loading */
+.conversation-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.conversation-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 300ms ease-in;
+}
+/* Add to your main CSS file or Tailwind config */
+.messenger-transition {
+  transition: all 0.3s ease;
+  transform: translateY(0);
+}
+
+.messenger-enter {
+  transform: translateY(100%);
+}
+
+.messenger-enter-active {
+  transform: translateY(0);
+}
+
+.messenger-exit {
+  transform: translateY(0);
+}
+
+.messenger-exit-active {
+  transform: translateY(100%);
+}

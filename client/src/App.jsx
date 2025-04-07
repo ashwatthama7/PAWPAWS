@@ -11,7 +11,9 @@ import CreateListing from './pages/CreateListing';
 import UpdateListing from './pages/UpdateListing';
 import Listing from './pages/Listing';
 import Search from './pages/Search';
-import News from './pages/News';
+import Chat from './pages/Chat';
+import ChatContainer from './components/ChatContainer';
+import { Toaster } from 'react-hot-toast';
 export default function App() {
   return (
     <BrowserRouter>
@@ -24,18 +26,18 @@ export default function App() {
       <Route path='/listing/:listingId' element={<Listing />}/>
       <Route path='/donate' element={<Donate />}/>
       <Route path='/search' element={<Search/>}/>
-      <Route path='/news' element={<News/>}/>
-   
+      
    
       <Route element={<PrivateRoute/>}>
+
       <Route path='/profile' element={<Profile />} />
       <Route path='/create-listing'element={<CreateListing />}></Route>
       <Route path='/update-listing/:listingId'element={<UpdateListing />}></Route>
-
-
+      <Route path='/chat/' element={<Chat />}></Route>
+      <Route path='/chat/:userId' element={<ChatContainer />}></Route>
     </Route>
     </Routes>
-    
+    <Toaster/>
     </BrowserRouter>
   );
 }

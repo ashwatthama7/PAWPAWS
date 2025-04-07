@@ -36,6 +36,19 @@ export default function OAuth() {
 
     }
   return (
-    <button onClick={handleGoogleClick}  type='button' className='bg-red-700 text-white p-3 rounded-lg uppercase hover:opacity-90' >Continue with google </button>
-  )
+    <button 
+    onClick={handleGoogleClick}
+    type='button'
+    className='flex items-center justify-center border border-gray-300 rounded-md p-2 w-full hover:bg-gray-100 transition'
+>
+    <img 
+        src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png" 
+        alt="Google Logo"
+        className='h-5 w-5 mr-3'
+    />
+    <span className='text-gray-700 font-medium'>
+        Continue with Google
+    </span>
+</button>
+ )
 }
