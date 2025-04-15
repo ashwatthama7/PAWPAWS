@@ -21,7 +21,7 @@ export default function Listing() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchListing = async () => {
+    const fetchListingAndUser = async () => {
       try {
         setLoading(true);
         const res = await fetch(`/api/listing/get/${params.listingId}`);
@@ -31,7 +31,15 @@ export default function Listing() {
           setLoading(false);
           return;
         }
-        setListing(data);
+        
+        // Fetch user data
+        const userRes = await fetch(`/api/user/${data.userRef}`);
+        const userData = await userRes.json();
+        
+        setListing({
+          ...data,
+          userData: userData // Add user data to listing
+        });
         setLoading(false);
         setError(false);
       } catch (error) {
@@ -39,9 +47,8 @@ export default function Listing() {
         setLoading(false);
       }
     };
-    fetchListing();
+    fetchListingAndUser();
   }, [params.listingId]);
-   // Import if not already
 
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.chat); // Add this inside your component if not present
@@ -139,11 +146,11 @@ export default function Listing() {
             {currentUser && listing.userRef !== currentUser._id && !contact && (
               <>
                 <button 
-                  onClick={handleStartChat} 
-                  className='bg-sky-600 text-white rounded-lg uppercase p-3 hover:opacity-95 flex items-center gap-2'
-                >
-                  <FaComments /> Start Chat
-                </button>
+                    onClick={handleStartChat} 
+                    className='bg-sky-600 text-white rounded-lg uppercase p-3 hover:opacity-95 flex items-center gap-2'
+                  >
+                    <FaComments /> Chat with @{listing.userData?.username}
+              </button>
               </>
             )}
             

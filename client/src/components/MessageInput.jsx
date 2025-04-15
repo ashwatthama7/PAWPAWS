@@ -1,18 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { sendMessageThunk } from "../redux/chatSlice";
 import { Send } from "lucide-react";
+import { io } from "socket.io-client";
 
 const MessageInput = () => {
   const dispatch = useDispatch();
   const [text, setText] = useState("");
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    // Establish WebSocket connection
+    const newSocket = io("http://localhost:3000", {
+      query: { userId: "YOUR_USER_ID" },  // Replace with actual userId
+    });
+
+    // Setup WebSocket to listen for new messages
+    newSocket.on("newMessage", (message) => {
+      // Directly dispatch message to Redux store when received
+      dispatch(addMessage(message));  // Update UI immediately
+    });
+
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.close();  // Cleanup on component unmount
+    };
+  }, [dispatch]);
 
   const handleSend = async (e) => {
     e.preventDefault();
     if (!text.trim()) return;
 
-    dispatch(sendMessageThunk({ text }));
-    setText("");
+    const message = { text, receiverId: "RECEIVER_USER_ID" };  // Add receiverId
+    dispatch(sendMessageThunk(message));  // Send the message to backend API
+
+    // Emit message to WebSocket for real-time delivery
+    socket.emit("sendMessage", message);
+
+    setText("");  // Clear the input after sending
   };
 
   return (

@@ -13,6 +13,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@reduxjs/toolkit": "^2.3.0",
+    "esewajs": "^2.0.0",
     "firebase": "^10.14.1",
     "font-awesome": "^4.7.0",
     "react": "^18.2.0",

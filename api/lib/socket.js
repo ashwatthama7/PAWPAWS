@@ -18,6 +18,7 @@ export function getReceiverSocketId(userId) {
 // Store online users
 const userSocketMap = {};  // {userId: socketId}
 
+// Handle message sending in WebSocket server
 io.on("connection", (socket) => {
   console.log("A user connected", socket.id);
 
@@ -28,16 +29,22 @@ io.on("connection", (socket) => {
     console.error("No userId provided during connection");
   }
 
-  // Broadcast to all clients
-  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+  socket.on("sendMessage", (message) => {
+    // Assuming 'message' has a 'receiverId'
+    const receiverSocketId = userSocketMap[message.receiverId];
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", message);  // Emit message to receiver
+    }
+  });
 
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
     if (userId && userSocketMap[userId]) {
       delete userSocketMap[userId];
     }
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
+
 
 export { io, app, server };

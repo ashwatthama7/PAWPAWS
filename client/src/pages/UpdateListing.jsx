@@ -30,8 +30,19 @@ export default function UpdateListing() {
   
   const breeds = [
     'Unknown Breed',
+    'News',
     'Labrador Retriever',
     'German Shepherd',
+    'Pug',
+    'French Bulldog',
+    'Schnauzer',
+    'Corgi',
+    'Maltese',
+    'Pekingese',
+    'Shiba Inu',
+    'Pit Bull',   
+    'Bhote',
+    'Tibetan Mastiff',
     'Golden Retriever',
     'Bulldog',
     'Beagle',
@@ -40,8 +51,16 @@ export default function UpdateListing() {
     'Yorkshire Terrier',
     'Dachshund',
     'Siberian Husky',
+    'Japanese Spitz',
+    'Chihuahua',
+    'Australian Shepherd',
+    'Boxer',
+    'Shih Tzu', 
+    'Cocker Spaniel',
+    'Doberman Pinscher',
+    'Great Dane',
+    'Border Collie',
   ];
-
   //this section helps in fetching data i.e. actual logic ins implemented here
   useEffect(()=>{
     const fetchListing = async() => {
@@ -171,7 +190,7 @@ export default function UpdateListing() {
             placeholder="Name"
             className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
             id="name"
-            maxLength="60"
+            maxLength="100"
             minLength="5"
             required
             onChange={handleChange}

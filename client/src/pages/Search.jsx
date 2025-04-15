@@ -2,12 +2,47 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ListingItem from '../components/ListingItem';
 
+const breeds = [
+  'Unknown Breed',
+  'News',
+  'Labrador Retriever',
+  'German Shepherd',
+  'Pug',
+  'French Bulldog',
+  'Schnauzer',
+  'Corgi',
+  'Maltese',
+  'Pekingese',
+  'Shiba Inu',
+  'Pit Bull',   
+  'Bhote',
+  'Tibetan Mastiff',
+  'Golden Retriever',
+  'Bulldog',
+  'Beagle',
+  'Poodle',
+  'Rottweiler',
+  'Yorkshire Terrier',
+  'Dachshund',
+  'Siberian Husky',
+  'Japanese Spitz',
+  'Chihuahua',
+  'Australian Shepherd',
+  'Boxer',
+  'Shih Tzu', 
+  'Cocker Spaniel',
+  'Doberman Pinscher',
+  'Great Dane',
+  'Border Collie',
+];
+
 export default function Search() {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebardata, setSidebardata] = useState({
     searchTerm: '',
     address: '',
+    breed: '',
     sort: 'createdAt',
     order: 'desc',
   });
@@ -20,13 +55,15 @@ export default function Search() {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get('searchTerm');
     const addressFromUrl = urlParams.get('address');
+    const breedFromUrl = urlParams.get('breed');
     const sortFromUrl = urlParams.get('sort');
     const orderFromUrl = urlParams.get('order');
 
-    if (searchTermFromUrl || addressFromUrl || sortFromUrl || orderFromUrl) {
+    if (searchTermFromUrl || addressFromUrl || breedFromUrl || sortFromUrl || orderFromUrl) {
       setSidebardata({
         searchTerm: searchTermFromUrl || '',
         address: addressFromUrl || '',
+        breed: breedFromUrl || '',
         sort: sortFromUrl || 'createdAt',
         order: orderFromUrl || 'desc',
       });
@@ -51,7 +88,7 @@ export default function Search() {
   }, [location.search]);
 
   const handleChange = (e) => {
-    if (e.target.id === 'searchTerm' || e.target.id === 'address') {
+    if (e.target.id === 'searchTerm' || e.target.id === 'address' || e.target.id === 'breed') {
       setSidebardata({ ...sidebardata, [e.target.id]: e.target.value });
     }
 
@@ -67,6 +104,7 @@ export default function Search() {
     const urlParams = new URLSearchParams();
     urlParams.set('searchTerm', sidebardata.searchTerm);
     urlParams.set('address', sidebardata.address);
+    urlParams.set('breed', sidebardata.breed);  // Include breed in query
     urlParams.set('sort', sidebardata.sort);
     urlParams.set('order', sidebardata.order);
     const searchQuery = urlParams.toString();
@@ -117,6 +155,25 @@ export default function Search() {
               value={sidebardata.address}
               onChange={handleChange}
             />
+          </div>
+
+          <div className='flex items-center gap-2'>
+            <label className='whitespace-nowrap font-semibold'>
+              Breed:
+            </label>
+            <select
+              id='breed'
+              value={sidebardata.breed}
+              onChange={handleChange}
+              className='border rounded-lg p-3 w-full'
+            >
+              <option value=''>Select Breed</option>
+              {breeds.map((breed) => (
+                <option key={breed} value={breed}>
+                  {breed}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className='flex items-center gap-2'>

@@ -8,6 +8,7 @@ import listingRouter from './routes/listing.route.js';
 import messageRouter from './routes/message.route.js';
 import {app, server} from './lib/socket.js'; //importing socket io instance
 import cors from "cors";
+import { EsewaInitiatePayment, paymentStatus } from './controllers/esewa.controller.js';
 
 app.use(cors({
   origin: "http://localhost:5173",  // Allow frontend to access backend
@@ -25,10 +26,7 @@ console.log('Connected to MongoDB!!');
         console.log(err);
     });
 
-
 app.use(express.json());
-
-
 app.use(cookieParser());
 
 server.listen(3000,() => {
@@ -41,6 +39,9 @@ app.use('/api/auth',authRouter);
 app.use('/api/listing',listingRouter); //listing router
 
 app.use('/api/message',messageRouter); //message router
+
+app.post("/initiate-payment", EsewaInitiatePayment);
+app.post("/payment-status", paymentStatus);
 
 
 //middle ware for exception handling if username and email already exists!!
@@ -55,5 +56,5 @@ app.use((err,req, res, next) =>{
 });
 
 
-  
+
   

@@ -66,46 +66,45 @@ export const getListing = async(req, res, next) =>{
 };
 
 export const getListings = async (req, res, next) => {
-    try {
-      const limit = parseInt(req.query.limit) || 9;
-      const startIndex = parseInt(req.query.startIndex) || 0;
-  
-      const searchTerm = req.query.searchTerm?.trim() || '';
-      const address = req.query.address?.trim() || '';
-      const breed = req.query.breed?.trim() || '';
-      const sort = req.query.sort || 'createdAt';
-      const order = req.query.order === 'asc' ? 1 : -1;
-  
-      // Build dynamic query
-      const query = {
-        $and: [
-          {
-            $or: [
-              { name: { $regex: searchTerm, $options: 'i' } },
-              { description: { $regex: searchTerm, $options: 'i' } },
-            ],
-          },
-        ],
-      };
-  
-      // Add breed if specified
-      if (breed) {
-        query.$and.push({ breed: { $regex: breed, $options: 'i' } });
-      }
-  
-      // Add address if specified
-      if (address) {
-        query.$and.push({ address: { $regex: address, $options: 'i' } });
-      }
-  
-      const listings = await Listing.find(query)
-        .sort({ [sort]: order })
-        .limit(limit)
-        .skip(startIndex);
-  
-      return res.status(200).json(listings);
-    } catch (error) {
-      next(error);
+  try {
+    const limit = parseInt(req.query.limit) || 9;
+    const startIndex = parseInt(req.query.startIndex) || 0;
+
+    const searchTerm = req.query.searchTerm?.trim() || '';
+    const address = req.query.address?.trim() || '';
+    const breed = req.query.breed?.trim() || ''; // Get breed from query
+    const sort = req.query.sort || 'createdAt';
+    const order = req.query.order === 'asc' ? 1 : -1;
+
+    // Build dynamic query
+    const query = {
+      $and: [
+        {
+          $or: [
+            { name: { $regex: searchTerm, $options: 'i' } },
+            { description: { $regex: searchTerm, $options: 'i' } },
+          ],
+        },
+      ],
+    };
+
+    // Add breed if specified
+    if (breed) {
+      query.$and.push({ breed: { $regex: breed, $options: 'i' } });
     }
-  };
-  
+
+    // Add address if specified
+    if (address) {
+      query.$and.push({ address: { $regex: address, $options: 'i' } });
+    }
+
+    const listings = await Listing.find(query)
+      .sort({ [sort]: order })
+      .limit(limit)
+      .skip(startIndex);
+
+    return res.status(200).json(listings);
+  } catch (error) {
+    next(error);
+  }
+};
